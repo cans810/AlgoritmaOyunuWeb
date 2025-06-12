@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "47141309209",
+    "firebase_url": "https://algoritmaoyunu-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "algoritmaoyunu",
+    "storage_bucket": "algoritmaoyunu.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:47141309209:android:43fd6277a2d9ea5ad19388",
+        "android_client_info": {
+          "package_name": "com.CanSelcuk.AlgoritmaOyunu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_zepKURMlbKpQiC09J_PwhxHteGsiLdg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
