@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algoritma Oyunu</title>
+    <style>
+      /* Tam ekran için temel stiller */
+      html, body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* Kenarlardaki kaydırma çubuklarını engeller */
+        background-color: #231F20; /* Arka plan rengi */
+      }
+      /* Unity konteynerini ortala ve esnek yap */
+      #unity-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #unity-canvas {
+        width: 100%;
+        height: 100%;
+      }
+      /* Basit yükleme çubuğu stilleri */
+      #unity-loading-bar { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: none; width: 300px; }
+      #unity-progress-bar-empty { width: 100%; height: 25px; background: #555; border-radius: 5px; }
+      #unity-progress-bar-full { width: 0%; height: 100%; background: #0078d4; border-radius: 5px; }
+    </style>
+  </head>
+  <body>
+    <!-- Unity oyununun yükleneceği alan -->
+    <div id="unity-container">
+      <canvas id="unity-canvas" tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-progress-bar-empty"><div id="unity-progress-bar-full"></div></div>
+      </div>
+    </div>
+
+    <!-- 1. Adım: Firebase SDK Script'lerini Yükle -->
+    <!-- Not: Bunlar v9 SDK'larıdır ancak 'compat' sürümleri, v8 API'sini (jslib'de kullanılan) destekler -->
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-database-compat.js"></script>
+    
+    <!-- 2. Adım: Firebase'i Başlat -->
+    <script>
+      // Firebase projenizin konfigürasyon bilgileri
+      var firebaseConfig = {
+        apiKey: "AIzaSyCDRAa_B01afoh6hc207LwOcO6-pEc-NmI",
+        authDomain: "algoritmaoyunu.firebaseapp.com",
+        databaseURL: "https://algoritmaoyunu-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "algoritmaoyunu",
+        storageBucket: "algoritmaoyunu.appspot.com",
+        messagingSenderId: "47141309209",
+        appId: "1:47141309209:web:89846ec802efbcb4d19388",
+        measurementId: "G-WFEPNKQ194"
+      };
+
+      // Firebase'i başlat
+      if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+        console.log("Firebase index.html icerisinden basariyla baslatildi.");
+      } else if (typeof firebase !== 'undefined' && firebase.apps.length) {
+        console.log("Firebase zaten baslatilmis.");
+      } else {
+        console.error("Firebase SDK'lari yuklenemedi!");
+      }
+    </script>
+    
+    <!-- 3. Adım: Unity Oyun Yükleyici Script'i -->
+    <script>
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/algoritmaoyunubuild.loader.js"; // Build JSON dosyanızın adı farklıysa bunu güncelleyin
+      var config = {
+        dataUrl: buildUrl + "/algoritmaoyunubuild.data",
+        frameworkUrl: buildUrl + "/algoritmaoyunubuild.framework.js",
+        codeUrl: buildUrl + "/algoritmaoyunubuild.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "CanSelcuk",
+        productName: "AlgoritmaOyunu",
+        productVersion: "1.0",
+      };
+
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+
+      loadingBar.style.display = "block";
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+          window.unityInstance = unityInstance; // JSLIB'nin Unity ile konuşması için kritik
+          loadingBar.style.display = "none";
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>
